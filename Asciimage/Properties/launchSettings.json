@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Asciimage (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Asciimage (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
