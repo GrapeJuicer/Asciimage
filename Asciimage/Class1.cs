@@ -1,6 +1,6 @@
 ﻿namespace Asciimage
 {
-    public class Asciimage
+    public class Class1
     {
 
     }
