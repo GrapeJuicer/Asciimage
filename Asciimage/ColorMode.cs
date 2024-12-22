@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Asciimage
 {
+    /// <summary>
+    /// Color mode of the image.
+    /// </summary>
     public enum ColorMode
     {
         Binary,

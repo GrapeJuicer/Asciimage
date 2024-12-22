@@ -19,6 +19,11 @@ namespace Asciimage
         /// </summary>
         private const string ANSIDefaultBackgroundColor = "\x1b[49m";
 
+        /// <summary>
+        /// Convert ConsoleColor to ANSI escape sequence for foreground color.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
         public static string ToANSIForegroundColor(this ConsoleColor color)
         {
             return color switch
@@ -43,6 +48,11 @@ namespace Asciimage
             };
         }
 
+        /// <summary>
+        /// Convert ConsoleColor to ANSI escape sequence for background color.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
         public static string ToANSIBackgroundColor(this ConsoleColor color)
         {
             return color switch
