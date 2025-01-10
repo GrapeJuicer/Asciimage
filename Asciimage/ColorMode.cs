@@ -12,7 +12,7 @@ namespace Asciimage
     public enum ColorMode
     {
         Binary,
-        Grayscale,
+        //Grayscale,
         Color,
     }
 }

@@ -41,7 +41,7 @@ namespace Asciimage
         /// <param name="characters">Characters used in the image.</param>
         /// <param name="colorMode">Color mode of the image.</param>
         /// <exception cref="ArgumentException">Thrown when both width and height are zero.</exception>
-        public AsciimageConfig(uint width = 0, uint height = 0, char[]? characters = null, ColorMode colorMode = ColorMode.Grayscale)
+        public AsciimageConfig(uint width = 0, uint height = 0, char[]? characters = null, ColorMode colorMode = ColorMode.Binary)
         {
             if (width == 0 && height == 0)
             {
