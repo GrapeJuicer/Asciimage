@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Asciimage", "Asciimage\Asci
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsciimageMaker", "AsciimageMaker\AsciimageMaker.csproj", "{45E501D3-73BC-48CB-83D4-74C213CBDAE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsciimageTester", "AsciimageTester\AsciimageTester.csproj", "{1C5E17EB-2AD9-4450-A400-3EBFFED22015}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{45E501D3-73BC-48CB-83D4-74C213CBDAE5}.Release|Any CPU.ActiveCfg = Release|x64
 		{45E501D3-73BC-48CB-83D4-74C213CBDAE5}.Release|Any CPU.Build.0 = Release|x64
 		{45E501D3-73BC-48CB-83D4-74C213CBDAE5}.Release|Any CPU.Deploy.0 = Release|x64
+		{1C5E17EB-2AD9-4450-A400-3EBFFED22015}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C5E17EB-2AD9-4450-A400-3EBFFED22015}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C5E17EB-2AD9-4450-A400-3EBFFED22015}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C5E17EB-2AD9-4450-A400-3EBFFED22015}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
