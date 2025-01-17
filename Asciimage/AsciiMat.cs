@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Asciimage
 {
@@ -13,22 +12,22 @@ namespace Asciimage
         /// <summary>
         /// Get the ASCII art character width.
         /// </summary>
-        public int Width { get { return Ascii.GetLength(1); } }
+        public int Width { get => Ascii.GetLength(1); }
         /// <summary>
         /// Get the ASCII art character height.
         /// </summary>
-        public int Height { get { return Ascii.GetLength(0); } }
+        public int Height { get => Ascii.GetLength(0); }
         /// <summary>
         /// Get the characters used in the ASCII art.
         /// </summary>
-        public HashSet<char> Characters
+        public SortedSet<string> Characters
         {
             get
             {
-                HashSet<char> result = [];
-                foreach (char c in Ascii)
+                SortedSet<string> result = [];
+                foreach (string s in Ascii)
                 {
-                    result.Add(c);
+                    result.Add(s);
                 }
                 return result;
             }
@@ -36,7 +35,7 @@ namespace Asciimage
         /// <summary>
         /// Get the ASCII art.
         /// </summary>
-        public char[,] Ascii { get; }
+        public string[,] Ascii { get; }
         /// <summary>
         /// Color information.
         /// null: AsciiMat does not have color information. Binary or Grayscale only.
@@ -52,7 +51,7 @@ namespace Asciimage
         /// <param name="foregroundColorMap">Foreground color map to display on commandline</param>
         /// <param name="backgroundColorMap">Background color map to display on commandline</param>
         /// <exception cref="ArgumentException"></exception>
-        public AsciiMat(char[,] mat, ConsoleColor[,]? foregroundColorMap = null, ConsoleColor[,]? backgroundColorMap = null)
+        public AsciiMat(string[,] mat, ConsoleColor[,]? foregroundColorMap = null, ConsoleColor[,]? backgroundColorMap = null)
         {
             int matHeight = mat.GetLength(0);
             int matWidth = mat.GetLength(1);
@@ -79,7 +78,7 @@ namespace Asciimage
                 throw new ArgumentException("Foreground must be set to use background color");
             }
 
-            Ascii = mat;
+            Ascii = (string[,])mat.Clone();
             ForegroundColorMap = foregroundColorMap;
         }
 

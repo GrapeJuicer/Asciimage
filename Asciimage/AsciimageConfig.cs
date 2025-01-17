@@ -15,13 +15,13 @@ namespace Asciimage
         /// Width of the image.
         /// If set to 0, it will be auto-adjusted to the original image width.
         /// </summary>
-        public uint Width;
+        public int Width;
 
         /// <summary>
         /// Height of the image.
         /// If set to 0, it will be auto-adjusted to the original image height.
         /// </summary>
-        public uint Height;
+        public int Height;
 
         /// <summary>
         /// Characters used in the image.
@@ -41,7 +41,7 @@ namespace Asciimage
         /// <param name="characters">Characters used in the image.</param>
         /// <param name="colorMode">Color mode of the image.</param>
         /// <exception cref="ArgumentException">Thrown when both width and height are zero.</exception>
-        public AsciimageConfig(uint width = 0, uint height = 0, char[]? characters = null, ColorMode colorMode = ColorMode.Binary)
+        public AsciimageConfig(int width = 0, int height = 0, char[]? characters = null, ColorMode colorMode = ColorMode.Binary)
         {
             if (width == 0 && height == 0)
             {
