@@ -1,9 +1,9 @@
 {
   "profiles": {
-    "Asciimage (Package)": {
+    "AsciimageMaker (Package)": {
       "commandName": "MsixPackage"
     },
-    "Asciimage (Unpackaged)": {
+    "AsciimageMaker (Unpackaged)": {
       "commandName": "Project"
     }
   }
