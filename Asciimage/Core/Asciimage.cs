@@ -203,7 +203,8 @@ namespace Asciimage.Core
                 {
                     for (int x = 0; x < seg.Horizontal; x++)
                     {
-                        diff += Math.Pow(area[y, x] - depthMap[y, x], 2);
+                        double d = area[y, x] - depthMap[y, x];
+                        diff += d == 0 ? 0 : d * d;
                     }
                 }
 
