@@ -2,7 +2,7 @@
 using SkiaSharp;
 using System.Diagnostics;
 
-namespace Asciimage
+namespace Asciimage.Core
 {
     /// <summary>
     /// Provides methods for generating ASCII art from images.
@@ -39,7 +39,7 @@ namespace Asciimage
 
             // Calculate the number of segments
             int horizontalSegmentCount, verticalSegmentCount;
-            if ((config.Width == 0 && config.Height == 0) || config.Width < 0 || config.Height < 0)
+            if (config.Width == 0 && config.Height == 0 || config.Width < 0 || config.Height < 0)
             {
                 throw new ArgumentException("Invalid config.");
             }
@@ -101,7 +101,7 @@ namespace Asciimage
             int height = image.Height;
             SKColor[] pixels = new SKColor[width * height];
             image.Pixels.CopyTo(pixels, 0);
-            
+
             Parallel.For(0, height, y =>
             {
                 int offset = y * width;
@@ -207,7 +207,7 @@ namespace Asciimage
                     }
                 }
 
-                diff /= (seg.Vertical * seg.Horizontal);
+                diff /= seg.Vertical * seg.Horizontal;
 
                 if (diff < minDiff)
                 {
