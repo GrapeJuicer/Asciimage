@@ -24,11 +24,6 @@ namespace Asciimage
         public int Height;
 
         /// <summary>
-        /// Characters used in the image.
-        /// </summary>
-        public char[] Characters;
-
-        /// <summary>
         /// Color mode of the image.
         /// </summary>
         public ColorMode ColorMode;
@@ -38,10 +33,9 @@ namespace Asciimage
         /// </summary>
         /// <param name="width">Width of the image.</param>
         /// <param name="height">Height of the image.</param>
-        /// <param name="characters">Characters used in the image.</param>
         /// <param name="colorMode">Color mode of the image.</param>
         /// <exception cref="ArgumentException">Thrown when both width and height are zero.</exception>
-        public AsciimageConfig(int width = 0, int height = 0, char[]? characters = null, ColorMode colorMode = ColorMode.Binary)
+        public AsciimageConfig(int width = 0, int height = 0, ColorMode colorMode = ColorMode.Binary)
         {
             if (width == 0 && height == 0)
             {
@@ -50,7 +44,6 @@ namespace Asciimage
 
             Width = width;
             Height = height;
-            Characters = characters ?? "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()[]{}<>,.?/\\|`~;:'\"+-=_".ToCharArray();
             ColorMode = colorMode;
         }
     }
