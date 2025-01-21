@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Asciimage
+namespace Asciimage.Core
 {
     /// <summary>
     /// Config that specifies width, height, characters, color mode.

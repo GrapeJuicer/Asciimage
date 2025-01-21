@@ -1,5 +1,5 @@
-using Asciimage;
 using Asciimage.Brushes;
+using Asciimage.Core;
 using SkiaSharp;
 using System.Diagnostics;
 
@@ -31,7 +31,7 @@ public class Test2
 
         Debug.WriteLine($"{DateTimeOffset.Now:HH:mm:ss.fff} Start Generating");
 
-        AsciiMat mat = Asciimage.Asciimage.Generate(bitmap, brush, segs[0], new AsciimageConfig(height: 20, colorMode: ColorMode.Binary));
+        AsciiMat mat = Asciimage.Core.Asciimage.Generate(bitmap, brush, segs[0], new AsciimageConfig(height: 20, colorMode: ColorMode.Binary));
         
         Debug.WriteLine($"{DateTimeOffset.Now:HH:mm:ss.fff} End");
 

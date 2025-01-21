@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Asciimage
+namespace Asciimage.Core
 {
     /// <summary>
     /// Color mode of the image.
