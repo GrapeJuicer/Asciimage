@@ -9,6 +9,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsciimageMaker", "Asciimage
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsciimageTester", "AsciimageTester\AsciimageTester.csproj", "{1C5E17EB-2AD9-4450-A400-3EBFFED22015}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AD8CA7C7-4B8B-4AC7-BA67-C7095BF57D89}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{86364DF3-94CB-4BA9-90A2-831D0C47E7C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "resources", "resources", "{93439C02-19DE-4441-BDC3-EA5CFE492F5F}"
+	ProjectSection(SolutionItems) = preProject
+		docs\resources\madcat-generate.png = docs\resources\madcat-generate.png
+		docs\resources\madcat.png = docs\resources\madcat.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,5 +46,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{86364DF3-94CB-4BA9-90A2-831D0C47E7C6} = {AD8CA7C7-4B8B-4AC7-BA67-C7095BF57D89}
+		{93439C02-19DE-4441-BDC3-EA5CFE492F5F} = {86364DF3-94CB-4BA9-90A2-831D0C47E7C6}
 	EndGlobalSection
 EndGlobal
