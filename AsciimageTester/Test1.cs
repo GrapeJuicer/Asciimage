@@ -21,7 +21,7 @@ namespace AsciimageTester
             SegmentCount seg = new(14, 8);
             List<SegmentCount> segs = [SegmentCount.OneByOne, SegmentCount.TwoByTwo, SegmentCount.FourByTwo, SegmentCount.FourByFour, seg];
 
-            CusomFontBrush brush = new(font, ss, segs);
+            GridSegmentedFontBrush brush = new(font, ss, segs);
 
             int pointSize = 10;
             int LineCount = 10;

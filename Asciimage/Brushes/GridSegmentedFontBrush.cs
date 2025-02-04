@@ -1,40 +1,26 @@
-﻿using SkiaSharp;
+﻿using Asciimage.Core;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Asciimage.Brushes
 {
-    public class CusomFontBrush : IFontBrush
+    public class GridSegmentedFontBrush : BaseGridSegmentedFontBrush
     {
-        public SKFontInfo FontInfo { get; init; }
-        public SKSize CharacterRatio { get; init; }
-        public Dictionary<SegmentCount, CharacterAreaMap> CharacterAreas { get; init; }
-
-        public CusomFontBrush(string fontFamily, Dictionary<SegmentCount, CharacterAreaMap> characterAreas, SKSize? characterRatio = null) :
-            this(SKTypeface.FromFamilyName(fontFamily), characterAreas, characterRatio) { }
-        public CusomFontBrush(SKTypeface fontFace, Dictionary<SegmentCount, CharacterAreaMap> characterAreas, SKSize? characterRatio = null) :
-            this(new SKFont(fontFace), characterAreas, characterRatio) { }
-        public CusomFontBrush(SKFont font, Dictionary<SegmentCount, CharacterAreaMap> characterAreas, SKSize? characterRatio = null)
-        {
-            if (!font.Typeface.IsFixedPitch)
-            {
-                throw new ArgumentException("The specified font must be monospaced.");
-            }
-
-            FontInfo = new(font);
-            CharacterAreas = characterAreas;
-            CharacterRatio = characterRatio ?? new SKSize(font.MeasureText("a"), font.Metrics.Descent - font.Metrics.Ascent);
-        }
-
-        public CusomFontBrush(string fontFamily, IEnumerable<char> characters, IEnumerable<SegmentCount>? segmentSizes = null) :
-            this(fontFamily, characters.Select(c => c.ToString()), segmentSizes) { }
-        public CusomFontBrush(string fontFamily, IEnumerable<string> characters, IEnumerable<SegmentCount>? segmentSizes = null) :
-            this(SKTypeface.FromFamilyName(fontFamily), characters, segmentSizes) { }
-        public CusomFontBrush(SKTypeface fontFace, IEnumerable<string> characters, IEnumerable<SegmentCount>? segmentSizes = null) :
-            this(new SKFont(fontFace), characters, segmentSizes) { }
+        public GridSegmentedFontBrush(string fontFamily, IEnumerable<char> characters, IEnumerable<SegmentCount>? segmentSizes = null) :
+            this(fontFamily, characters.Select(c => c.ToString()), segmentSizes)
+        { }
+        public GridSegmentedFontBrush(string fontFamily, IEnumerable<string> characters, IEnumerable<SegmentCount>? segmentSizes = null) :
+            this(SKTypeface.FromFamilyName(fontFamily), characters, segmentSizes)
+        { }
+        public GridSegmentedFontBrush(SKTypeface fontFace, IEnumerable<string> characters, IEnumerable<SegmentCount>? segmentSizes = null) :
+            this(new SKFont(fontFace), characters, segmentSizes)
+        { }
 
         /// <summary>
         /// This class uses SkiaSharp to calcurate character segment area.
@@ -45,10 +31,8 @@ namespace Asciimage.Brushes
         /// <param name="fontFamily"></param>
         /// <param name="characters"></param>
         /// <param name="segmentSizes">1x1 is used if this parameter is `null`.</param>
-        public CusomFontBrush(SKFont font, IEnumerable<string> characters, IEnumerable<SegmentCount>? segmentSizes = null)
+        public GridSegmentedFontBrush(SKFont font, IEnumerable<string> characters, IEnumerable<SegmentCount>? segmentSizes = null) : base(font, [], null)
         {
-            FontInfo = new(font);
-
             // use 1x1 if not specified
             segmentSizes ??= [SegmentCount.OneByOne];
 
@@ -56,8 +40,6 @@ namespace Asciimage.Brushes
             {
                 throw new ArgumentException("The specified font must be monospaced.");
             }
-
-            CharacterRatio = new SKSize(font.MeasureText("a"), font.Metrics.Descent - font.Metrics.Ascent);
 
             segmentSizes = segmentSizes.Distinct();
 
@@ -68,8 +50,6 @@ namespace Asciimage.Brushes
             {
                 throw new ArgumentException("segmentSize is larger than actual character size. Specify smaller segmentSize or larger font size.");
             }
-
-            CharacterAreas = [];
 
             var paint = new SKPaint
             {
@@ -155,6 +135,83 @@ namespace Asciimage.Brushes
             }
 
             return values.Average();
+        }
+
+        protected override string GetSegmentCharacter(SKBitmap bitmap, SKRectI rect, SegmentCount seg)
+        {
+            var areaMap = CharacterAreas[seg].RelativeAreaMap;
+
+            double[,] depthMap = new double[seg.Vertical, seg.Horizontal];
+
+            double w = (double)rect.Width / seg.Horizontal;
+            double h = (double)rect.Height / seg.Vertical;
+
+            int iMin, jMin = rect.Top;
+            int iMax, jMax;
+
+            for (int y = 0; y < seg.Vertical; y++)
+            {
+                jMax = (int)Math.Floor(h * (y + 1)) + rect.Top;
+                iMin = rect.Left;
+
+                for (int x = 0; x < seg.Horizontal; x++)
+                {
+                    double totalBrightness = 0;
+                    int pixelCount = 0;
+
+                    iMax = (int)Math.Floor(w * (x + 1)) + rect.Left;
+
+                    for (int j = jMin; j < jMax; j++)
+                    {
+                        for (int i = iMin; i < iMax; i++)
+                        {
+                            SKColor color = bitmap.GetPixel(i, j);
+                            color.ToHsv(out _, out _, out float v);
+                            totalBrightness += v / 100;
+                            pixelCount++;
+                        }
+                    }
+
+                    depthMap[y, x] = totalBrightness / pixelCount;
+
+                    iMin = iMax;
+                }
+
+                jMin = jMax;
+            }
+
+            double minDiff = double.MaxValue;
+            string bestMatch = string.Empty;
+
+            foreach (var kvp in areaMap)
+            {
+                double[,] area = kvp.Value;
+                double diff = 0;
+
+                for (int y = 0; y < seg.Vertical; y++)
+                {
+                    for (int x = 0; x < seg.Horizontal; x++)
+                    {
+                        double d = area[y, x] - depthMap[y, x];
+                        diff += d == 0 ? 0 : d * d;
+                    }
+                }
+
+                diff /= seg.Vertical * seg.Horizontal;
+
+                if (diff < minDiff)
+                {
+                    minDiff = diff;
+                    bestMatch = kvp.Key;
+                }
+            }
+
+            if (bestMatch == string.Empty)
+            {
+                throw new InvalidOperationException("No match found.");
+            }
+
+            return bestMatch;
         }
     }
 }

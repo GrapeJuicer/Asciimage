@@ -21,8 +21,8 @@ public class Test2
         List<SegmentCount> segs = [SegmentCount.FourByTwo];
 
         Debug.WriteLine($"{DateTimeOffset.Now:HH:mm:ss.fff} Start Brush Creating");
-        
-        CusomFontBrush brush = new(font, ss, segs);
+
+        GridSegmentedFontBrush brush = new(font, ss, segs);
 
         Debug.WriteLine($"{DateTimeOffset.Now:HH:mm:ss.fff} Brush created");
 

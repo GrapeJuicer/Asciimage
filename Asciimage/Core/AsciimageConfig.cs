@@ -13,13 +13,13 @@ namespace Asciimage.Core
     {
         /// <summary>
         /// Width of the image.
-        /// If set to 0, it will be auto-adjusted to the original image width.
+        /// If set to -1, it will be auto-adjusted to the original image width.
         /// </summary>
         public int Width;
 
         /// <summary>
         /// Height of the image.
-        /// If set to 0, it will be auto-adjusted to the original image height.
+        /// If set to -1, it will be auto-adjusted to the original image height.
         /// </summary>
         public int Height;
 
@@ -35,9 +35,9 @@ namespace Asciimage.Core
         /// <param name="height">Height of the image.</param>
         /// <param name="colorMode">Color mode of the image.</param>
         /// <exception cref="ArgumentException">Thrown when both width and height are zero.</exception>
-        public AsciimageConfig(int width = 0, int height = 0, ColorMode colorMode = ColorMode.Binary)
+        public AsciimageConfig(int width = -1, int height = -1, ColorMode colorMode = ColorMode.Binary)
         {
-            if (width == 0 && height == 0)
+            if (width == -1 && height == -1 || width == 0 || height == 0)
             {
                 throw new ArgumentException("Either width or height must be specified.");
             }
