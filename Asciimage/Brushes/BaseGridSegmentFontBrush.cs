@@ -77,7 +77,7 @@ namespace Asciimage.Brushes
                     int xMax = (int)Math.Floor(cellWidth * (x + 1));
 
                     // Define the region of interest (ROI)
-                    SKRectI roi = new(xMin, yMin, xMax - 1, yMax - 1);
+                    SKRectI roi = new(xMin, yMin, xMax - 1 <= xMin ? xMin + 1 : xMax - 1, yMax - 1 <= yMin ? yMin + 1 : yMax - 1);
 
                     // Get the character that best represents the region
                     asciiArt[y, x] = GetSegmentCharacter(bitmap, roi, seg);
