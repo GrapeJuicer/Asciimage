@@ -86,7 +86,8 @@ namespace Asciimage.Core
         {
             int width = Height;
             int height = Width;
-            string result = string.Empty;
+
+            StringBuilder result = new("");
 
             if (asColor && ForegroundColorMap == null)
             {
@@ -100,30 +101,30 @@ namespace Asciimage.Core
                     if (asColor && ForegroundColorMap != null)
                     {
                         // add foreground ANSI escape sequence
-                        result += ForegroundColorMap[row, col].ToANSIForegroundColor();
+                        result.Append(ForegroundColorMap[row, col].ToANSIForegroundColor());
 
                         if (BackgroundColorMap != null)
                         {
                             // add background ANSI escape sequence
-                            result += BackgroundColorMap[row, col].ToANSIForegroundColor();
+                            result.Append(BackgroundColorMap[row, col].ToANSIForegroundColor());
                         }
                     }
 
-                    result += Ascii[row, col];
+                    result.Append(Ascii[row, col]);
                 }
 
                 if (row < width - 1)
                 {
-                    result += '\n';
+                    result.Append('\n');
                 }
             }
 
             if (asColor && ForegroundColorMap != null)
             {
-                result += ((ConsoleColor)(-1)).ToANSIBackgroundColor() + ((ConsoleColor)(-1)).ToANSIBackgroundColor();
+                result.Append(((ConsoleColor)(-1)).ToANSIBackgroundColor() + ((ConsoleColor)(-1)).ToANSIBackgroundColor());
             }
 
-            return result;
+            return result.ToString();
         }
     }
 }
