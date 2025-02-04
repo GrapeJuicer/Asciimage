@@ -128,7 +128,7 @@ namespace Asciimage.Brushes
                 for (int x = xMin; x < xMax; x++)
                 {
                     SKColor color = bitmap.GetPixel(x, y);
-                    // 元画像がグレースケールという前提なので、HSVに変換してVを取得することで0-255での表現に変化できる
+                    // Assuming the original image is grayscale, convert to HSV and get V to represent it in the range of 0-255
                     color.ToHsv(out _, out _, out float v);
                     values.Add(v / 100);
                 }
