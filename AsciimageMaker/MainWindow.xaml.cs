@@ -181,7 +181,7 @@ namespace AsciimageMaker
             if (sender is Slider slider)
             {
                 var otherSlider = slider == WidthSlider ? HeightSlider : WidthSlider;
-                if (slider.Value == 0)
+                if (otherSlider is not null && slider.Value == 0 && otherSlider.Value == 0)
                 {
                     otherSlider.Value = 20;
                 }
