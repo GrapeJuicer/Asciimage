@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="AsciimageMaker.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AsciimageMaker"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ascc="using:Asciimage.Core"
+    mc:Ignorable="d"
+    Title="AsciimageMaker">
+
+    <Grid Padding="24" RowSpacing="24" ColumnSpacing="24">
+        <Grid.Resources>
+            <Style x:Key="NoClearButtonTextBoxStyle" TargetType="TextBox">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Grid>
+                                <VisualStateManager.VisualStateGroups>
+                                    <!-- 省略 -->
+                                </VisualStateManager.VisualStateGroups>
+                                <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                                    <ScrollViewer x:Name="ContentElement" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Margin="2" />
+                                </Border>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.ColumnSpan="3" RowSpacing="12" ColumnSpacing="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="UsingCharactersTextBox" Grid.ColumnSpan="3" Header="Using Characters (Only ASCII charcters)" Text=""/>
+            <ComboBox x:Name="ColorModeComboBox" Grid.Row="1" HorizontalAlignment="Stretch" Header="Color Mode">
+                <ComboBox.Resources>
+                    <ascc:ColorMode x:Key="ColorMode.Binary">Binary</ascc:ColorMode>
+                    <ascc:ColorMode x:Key="ColorMode.Grayscale">Grayscale</ascc:ColorMode>
+                    <ascc:ColorMode x:Key="ColorMode.Color">Color</ascc:ColorMode>
+                </ComboBox.Resources>
+                <ComboBoxItem Content="Binary" Tag="{StaticResource ColorMode.Binary}"/>
+                <ComboBoxItem Content="Grayscale" IsSelected="True" Tag="{StaticResource ColorMode.Grayscale}"/>
+                <ComboBoxItem IsEnabled="False" Content="Color" Tag="{StaticResource ColorMode.Color}"/>
+            </ComboBox>
+            <ComboBox x:Name="SegmentCountComboBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Header="Number of divisions in segment">
+                <ComboBoxItem Content="1 x 1" Tag="1;1" IsSelected="True"/>
+                <ComboBoxItem Content="2 x 1" Tag="2;1"/>
+                <ComboBoxItem Content="2 x 2" Tag="2;2"/>
+                <ComboBoxItem Content="4 x 2" Tag="4;2"/>
+                <ComboBoxItem Content="4 x 4" Tag="4;4"/>
+            </ComboBox>
+            <TextBox x:Name="FontFamilyNameTextBox" Grid.Row="1" Grid.Column="2" Header="Font Family Name" PlaceholderText="Cascadia Code" Text="Cascadia Code"/>
+            <Grid Grid.Row="2" Grid.ColumnSpan="3" ColumnSpacing="24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Slider x:Name="WidthSlider" Header="Width (0 is Auto, default 20)" Value="20" Minimum="0" Maximum="100" ValueChanged="SizeSlider_ValueChanged"/>
+                <Slider x:Name="HeightSlider" Grid.Column="1" Header="Height (0 is Auto, default 0)" Value="0" Minimum="0" Maximum="100" ValueChanged="SizeSlider_ValueChanged"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" RowSpacing="8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel HorizontalAlignment="Center" Spacing="24">
+                <Button Content="Open File" Click="InputImageSelectButton_Click"/>
+            </StackPanel>
+            <TextBlock Grid.Row="1" x:Name="OpenedFileName" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+            <Border Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1" BorderBrush="Gray">
+                <Viewbox>
+                    <Image x:Name="InputImage"/>
+                </Viewbox>
+            </Border>
+        </Grid>
+        <Button x:Name="GenerateButton" Grid.Row="1" Grid.Column="1" Click="GenerateButton_Click" Content="Generate"/>
+        <!--
+        <TeachingTip x:Name="GenerateTeachingTip" IsOpen="True"
+            Target="{x:Bind GenerateButton}"
+            Title="Brush Re-Generation"
+            Subtitle="Font Brush needs to be re-generated because brush config is changed.">
+            <TeachingTip.IconSource>
+                <SymbolIconSource Symbol="Refresh"/>
+            </TeachingTip.IconSource>
+        </TeachingTip>
+        -->
+        <Grid Grid.Row="1" Grid.Column="2" RowSpacing="8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Spacing="24" HorizontalAlignment="Center">
+                <Button x:Name="CopyButton" Click="CopyResultButton_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <SymbolIcon Symbol="Copy"/>
+                        <TextBlock Text="Copy"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <!-- unused -->
+            <TextBlock Grid.Row="1" x:Name="OutputInfoTextBlock" HorizontalAlignment="Center"/>
+            <Border Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1" BorderBrush="Gray" Background="Black">
+                <Viewbox>
+                    <TextBlock x:Name="GeneratedRichTextBox" IsTextSelectionEnabled="True" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Left" FontFamily="Cascadia Code"/>
+                </Viewbox>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
