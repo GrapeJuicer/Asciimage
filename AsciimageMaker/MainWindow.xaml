@@ -60,7 +60,12 @@
                 <ComboBoxItem Content="Grayscale" IsSelected="True" Tag="{StaticResource ColorMode.Grayscale}"/>
                 <ComboBoxItem IsEnabled="False" Content="Color" Tag="{StaticResource ColorMode.Color}"/>
             </ComboBox>
-            <ComboBox x:Name="SegmentCountComboBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Header="Number of divisions in segment">
+            <ComboBox x:Name="FilterComboBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Header="Filter">
+                <ComboBoxItem Content="None" Tag="none" IsSelected="True"/>
+                <ComboBoxItem Content="Sobel Filter" Tag="sobel"/>
+                <ComboBoxItem Content="Laplacian Filter" Tag="laplacian"/>
+            </ComboBox>
+            <ComboBox x:Name="SegmentCountComboBox" Grid.Row="2" HorizontalAlignment="Stretch" Header="Number of divisions in segment">
                 <ComboBoxItem Content="1 x 1" Tag="1;1" IsSelected="True"/>
                 <ComboBoxItem Content="2 x 1" Tag="2;1"/>
                 <ComboBoxItem Content="2 x 2" Tag="2;2"/>
@@ -73,9 +78,9 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Slider x:Name="WidthSlider" Header="Width (0 is Auto, default 20)" Value="20" Minimum="0" Maximum="100" ValueChanged="SizeSlider_ValueChanged"/>
-                <Slider x:Name="HeightSlider" Grid.Column="1" Header="Height (0 is Auto, default 0)" Value="0" Minimum="0" Maximum="100" ValueChanged="SizeSlider_ValueChanged"/>
             </Grid>
+            <Slider Grid.Row="2" Grid.Column="1" x:Name="WidthSlider" Header="Width (0 is Auto, default 20)" Value="20" Minimum="0" Maximum="100" ValueChanged="SizeSlider_ValueChanged"/>
+            <Slider Grid.Row="2" Grid.Column="2" x:Name="HeightSlider" Header="Height (0 is Auto, default 0)" Value="0" Minimum="0" Maximum="100" ValueChanged="SizeSlider_ValueChanged"/>
         </Grid>
         <Grid Grid.Row="1" RowSpacing="8">
             <Grid.RowDefinitions>

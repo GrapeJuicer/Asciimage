@@ -45,6 +45,7 @@ namespace AsciimageMaker
         private int CachedColorModeIndex = 1; // Grayscale
         private int CachedSegmentCountIndex = 0; // OneByOne
         private string CachedFontFamilyName = "Cascadia Code";
+        private int CachedFilterIndex = 0;
 
         private string? FilePath;
         private AsciiMat? GeneratedAsciiMat;
@@ -105,10 +106,18 @@ namespace AsciimageMaker
                 }
 
                 SegmentCount segmentCount = GetSelectedSegmentCount();
-                ColorMode colorMode = (ColorMode)((ColorModeComboBox.SelectedItem as ComboBoxItem)?.Tag ?? throw new Exception("Unknown Color Mode."));
+                ColorMode colorMode = (ColorMode)((ColorModeComboBox.SelectedItem as FrameworkElement)?.Tag ?? throw new Exception("Unknown Color Mode."));
+
+                // get filter function
+                Func<SKBitmap, SKBitmap> filterFunc = (FilterComboBox.SelectedItem as FrameworkElement)?.Tag switch
+                {
+                    "sobel" => ApplySobelFilter,
+                    "laplacian" => ApplyLaplacianFilter,
+                    _ => x => x,
+                };
 
                 using var stream = File.OpenRead(FilePath ?? throw new Exception("No file path is specified."));
-                SKBitmap bitmap = SKBitmap.Decode(stream);
+                SKBitmap bitmap = filterFunc(SKBitmap.Decode(stream));
 
                 int w = (int)WidthSlider.Value;
                 int h = (int)HeightSlider.Value;
@@ -126,7 +135,7 @@ namespace AsciimageMaker
                 CachedColorModeIndex = ColorModeComboBox.SelectedIndex;
                 CachedSegmentCountIndex = SegmentCountComboBox.SelectedIndex;
                 CachedFontFamilyName = FontFamilyNameTextBox.Text;
-
+                CachedFilterIndex = FilterComboBox.SelectedIndex;
                 // display result
 
                 GeneratedRichTextBox.FontFamily = new FontFamily(FontFamilyNameTextBox.Text);
@@ -155,7 +164,8 @@ namespace AsciimageMaker
 
         private SegmentCount GetSelectedSegmentCount()
         {
-            return (SegmentCountComboBox.SelectedItem as ComboBoxItem)?.Tag.ToString() switch
+            string s = (SegmentCountComboBox.SelectedItem as FrameworkElement)?.Tag.ToString() ?? string.Empty;
+            return s switch
             {
                 "1;1" => SegmentCount.OneByOne,
                 "2;1" => SegmentCount.TwoByOne,
@@ -164,6 +174,93 @@ namespace AsciimageMaker
                 "4;4" => SegmentCount.FourByFour,
                 _ => throw new ArgumentException("Invalid segment count")
             };
+        }
+
+        private static SKBitmap ApplyLaplacianFilter(SKBitmap bitmap)
+        {
+            int width = bitmap.Width;
+            int height = bitmap.Height;
+            SKBitmap result = new(width, height);
+
+            int[,] laplacianKernel = new int[,]
+            {
+                { 0, -1, 0 },
+                { -1, 4, -1 },
+                { 0, -1, 0 }
+            };
+
+            for (int y = 1; y < height - 1; y++)
+            {
+                for (int x = 1; x < width - 1; x++)
+                {
+                    int pixelValue = 0;
+
+                    for (int ky = -1; ky <= 1; ky++)
+                    {
+                        for (int kx = -1; kx <= 1; kx++)
+                        {
+                            SKColor color = bitmap.GetPixel(x + kx, y + ky);
+                            int intensity = (color.Red + color.Green + color.Blue) / 3;
+
+                            pixelValue += intensity * laplacianKernel[ky + 1, kx + 1];
+                        }
+                    }
+
+                    pixelValue = Math.Min(255, Math.Max(0, pixelValue));
+
+                    result.SetPixel(x, y, new SKColor((byte)pixelValue, (byte)pixelValue, (byte)pixelValue));
+                }
+            }
+
+            return result;
+        }
+
+        public static SKBitmap ApplySobelFilter(SKBitmap inputBitmap)
+        {
+            int width = inputBitmap.Width;
+            int height = inputBitmap.Height;
+
+            SKBitmap outputBitmap = new(width, height);
+            int[,] sobelX = {
+                { -1, 0, 1 },
+                { -2, 0, 2 },
+                { -1, 0, 1 }
+            };
+
+            int[,] sobelY = {
+                { -1, -2, -1 },
+                { 0,  0,  0 },
+                { 1,  2,  1 }
+            };
+
+            // ピクセル操作
+            for (int y = 1; y < height - 1; y++)
+            {
+                for (int x = 1; x < width - 1; x++)
+                {
+                    int gradientX = 0;
+                    int gradientY = 0;
+
+                    for (int ky = -1; ky <= 1; ky++)
+                    {
+                        for (int kx = -1; kx <= 1; kx++)
+                        {
+                            var pixel = inputBitmap.GetPixel(x + kx, y + ky);
+                            int gray = (pixel.Red + pixel.Green + pixel.Blue) / 3; // グレースケールに変換
+
+                            gradientX += gray * sobelX[ky + 1, kx + 1];
+                            gradientY += gray * sobelY[ky + 1, kx + 1];
+                        }
+                    }
+
+                    int magnitude = (int)Math.Sqrt(gradientX * gradientX + gradientY * gradientY);
+                    magnitude = Math.Clamp(magnitude, 0, 255);
+
+                    outputBitmap.SetPixel(x, y, new SKColor((byte)magnitude, (byte)magnitude, (byte)magnitude));
+                }
+            }
+
+            return outputBitmap;
         }
 
         private void CopyResultButton_Click(object sender, RoutedEventArgs e)
