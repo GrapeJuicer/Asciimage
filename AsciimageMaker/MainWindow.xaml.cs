@@ -53,6 +53,8 @@ namespace AsciimageMaker
         public MainWindow()
         {
             this.InitializeComponent();
+            ExtendsContentIntoTitleBar = true;
+            SetTitleBar(TitleBarStackPanel);
             
             UsingCharactersTextBox.Text = CachedUsingCharacters;
             UsingCharactersTextBox.PlaceholderText = CachedUsingCharacters;
